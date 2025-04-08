@@ -1,64 +1,68 @@
 import pytest
-from httpx import AsyncClient
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.database import Base, get_db
 from app.main import app
-from fastapi.testclient import TestClient
 
+# Use SQLite for testing
 SQL_DB_URL = "sqlite:///./test.db"
 engine = create_engine(SQL_DB_URL)
 TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Setup the database
 @pytest.fixture(scope="module")
 def test_db():
     Base.metadata.create_all(bind=engine)
     try:
-        yield TestSessionLocal()
+        db = TestSessionLocal()
+        yield db
     finally:
+        db.close()
         Base.metadata.drop_all(bind=engine)
 
+# Setup TestClient with dependency override
 @pytest.fixture(scope="module")
-async def client(test_db):
-    # Override the dependency to use the test database
-    app.dependency_overrides[get_db] = lambda: test_db
+def client(test_db):
+    def override_get_db():
+        try:
+            yield test_db
+        finally:
+            pass
     
-    # Create async client without app parameter
-    async with AsyncClient(base_url="http://test") as ac:
-        yield ac
+    app.dependency_overrides[get_db] = override_get_db
+    with TestClient(app) as client:
+        yield client
+    app.dependency_overrides.clear()
 
-@pytest.mark.anyio
-async def test_register_user(client):
-    response = await client.post(
+def test_register_user(client):
+    response = client.post(
         "/users/register",
         json={"username": "test_user", "password": "1234"}
     )
     assert response.status_code == 200
-    assert response.json() == {"msg": "User created!"}  # Note the ! in the message
+    assert response.json() == {"msg": "User created!"}
 
-@pytest.mark.anyio
-async def test_register_existing_user(client):
-    response = await client.post(
+def test_register_existing_user(client):
+    response = client.post(
         "/users/register",
         json={"username": "test_user", "password": "1234"}
     )
     assert response.status_code == 400
     assert response.json() == {"detail": "User already exists"}
 
-@pytest.mark.anyio
-async def test_login_user(client):
-    response = await client.post(
+def test_login_user(client):
+    response = client.post(
         "/users/login",
-        json={"username": "test_user", "password": "1234"}
+        json={"username": "test_user", "password": "1234"}  # Changed params to json
     )
     assert response.status_code == 200
-    assert response.json()["msg"] == "Login succesfully!"  # Note the typo in "successfully"
+    assert response.json()["msg"] == "Login succesfully!"
 
-@pytest.mark.anyio
-async def test_login_invalid_user(client):
-    response = await client.post(
+def test_login_invalid_user(client):
+    response = client.post(
         "/users/login",
-        json={"username": "invaliduser", "password": "testpass"}
+        json={"username": "invaliduser", "password": "testpass"}  # Changed params to json
     )
     assert response.status_code == 400
     assert response.json() == {"detail": "Incorrect credentials"}

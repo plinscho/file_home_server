@@ -16,21 +16,22 @@ def upload_file(user_id: int, file: UploadFile=File(...), db: Session = Depends(
     if not user:
         raise HTTPException(status_code=404, detail="Error: User not found")
 
-    file_path = STORAGE_PATH/file.file_name
+    file_path = STORAGE_PATH / file.filename  # Correct attribute name
     with open(file_path, "wb") as f:
-        f.write(file.file.read())
+        content = file.file.read()
+        f.write(content)
         
     data = models.Data(
         user_id = user.id,
-        file_name = file.file_name,
-        file_path = file.file_path,
-        file_type = file.file_type,
-        file_size = file.file_size,
+        file_name = file.filename,  # Correct attribute name
+        file_path = str(file_path),  # Use the correctly constructed path
+        file_type = file.content_type,  # Correct attribute name
+        file_size = len(content),  # Calculate size correctly
         date_upload = datetime.now()
     )
     db.add(data)
     db.commit()
-    return {"msg": "File was uploaded!", "Path: ": file.file_path}
+    return {"msg": "File was uploaded!", "Path": str(file_path)}
 
 
 @router.get("/list/")

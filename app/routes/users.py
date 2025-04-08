@@ -23,9 +23,9 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     return {'msg':'User created!'}
 
 @router.post('/login')
-def login(username: str, password: str, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter_by(username=username).first()
-    if not user or not bcrypt.verify(password, user.password):
+def login(user: UserCreate, db: Session = Depends(get_db)):
+    existing_user = db.query(models.User).filter_by(username=user.username).first()
+    if not existing_user or not bcrypt.verify(user.password, existing_user.password):
         raise HTTPException(status_code=400, detail='Incorrect credentials')
-    return {'msg': 'Login succesfully!', 'user_id':user.id}
+    return {'msg': 'Login succesfully!', 'user_id': existing_user.id}
 
