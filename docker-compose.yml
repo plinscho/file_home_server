@@ -1,0 +1,33 @@
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: home_server
+      POSTGRES_USER: clouduser
+      POSTGRES_PASSWORD: cloudpass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clouduser -d home_server"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./storage:/app/storage
+    ports:
+      - "8888:8000"
+    env_file:
+      - .env
+    command: uvicorn app.main:app --host 0.0.0.0 --reload
+    restart: on-failure
+
+volumes:
+  postgres_data:
