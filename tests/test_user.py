@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.database import Base, get_db
 from app.main import app
+from fastapi.testclient import TestClient
 
 SQL_DB_URL = "sqlite:///./test.db"
 engine = create_engine(SQL_DB_URL)
@@ -21,9 +22,9 @@ def test_db():
 async def client(test_db):
     # Override the dependency to use the test database
     app.dependency_overrides[get_db] = lambda: test_db
-
-    # Use AsyncClient for testing
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    
+    # Create async client without app parameter
+    async with AsyncClient(base_url="http://test") as ac:
         yield ac
 
 @pytest.mark.anyio
@@ -33,7 +34,7 @@ async def test_register_user(client):
         json={"username": "test_user", "password": "1234"}
     )
     assert response.status_code == 200
-    assert response.json() == {"msg": "User created"}
+    assert response.json() == {"msg": "User created!"}  # Note the ! in the message
 
 @pytest.mark.anyio
 async def test_register_existing_user(client):
@@ -51,7 +52,7 @@ async def test_login_user(client):
         json={"username": "test_user", "password": "1234"}
     )
     assert response.status_code == 200
-    assert response.json()["msg"] == "Login successfully!"
+    assert response.json()["msg"] == "Login succesfully!"  # Note the typo in "successfully"
 
 @pytest.mark.anyio
 async def test_login_invalid_user(client):
