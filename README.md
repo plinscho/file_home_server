@@ -1,3 +1,52 @@
+Hey bud!
+
+Welcome to the Home Server Project!
+
+This project is designed to help you set up and manage a personal home server using Docker. 
+A home server allows you to centralize your data, host applications, 
+and manage services for your personal or family use. 
+
+With this setup, you can run various services like 
+file storage, media streaming, home automation, and more—all from the comfort of your own home.
+
+Key Features:
+- Easy deployment using Docker containers.
+- Scalable and customizable to fit your needs.
+- Secure and private, with full control over your data.
+
+Feel free to explore, modify, and expand this project to suit your requirements.
+
+# HOW DO I MAKE IT WORK?
+
+To run this app you need docker installed, it can we used with windows docker desktop.
+Just download the repository, cd into it and run:
+
+ · Log mode:
+(The terminal will become the docker container and print out the logs from the services)
+```
+docker compose up --build
+```
+
+OR
+
+ · Detached mode:
+(Runs in the background)
+```
+docker compose up --build -d
+```
+
+To acces the service we will need the ipv4 address:
+```
+http://<ipaddr>:8888/docs
+```
+
+After that, register with the gui from fastAPI, log in and use your id to upload the files!
+
+
+
+
+
+
 # DOCUMENTATION 
 
 Collecting workspace informationCertainly! Based on your workspace structure and the technologies used in your project, here are some references and tutorials to help you understand how the project behaves and how the technologies work together:
