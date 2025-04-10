@@ -49,10 +49,6 @@ After that, register with the gui from fastAPI, log in and use your id to upload
 
 # DOCUMENTATION 
 
-Collecting workspace informationCertainly! Based on your workspace structure and the technologies used in your project, here are some references and tutorials to help you understand how the project behaves and how the technologies work together:
-
----
-
 ### **1. FastAPI**
 FastAPI is the core framework used to build the API in your project. It is a modern, fast (high-performance) web framework for building APIs with Python.
 
