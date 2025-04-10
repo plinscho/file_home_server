@@ -1,10 +1,15 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from .routes import users, files
 from . import models
 from .database import Base, engine, get_db
 
 DEFAULT_PWD = 1234
 app = FastAPI()
+
+@app.get("/")
+def redirect():
+	return RedirectResponse(url="/docs")
 
 @app.on_event("startup")
 def	startup_event():
