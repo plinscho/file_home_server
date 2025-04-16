@@ -1,12 +1,15 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
-
+from fastapi.staticfiles import StaticFiles
 from .routes import users, files
 from . import models
 from .database import Base, engine, get_db
 
 DEFAULT_PWD = 1234
 app = FastAPI()
+
+# https://fastapi.tiangolo.com/tutorial/static-files/#use-staticfiles
+app.mount("/", StaticFiles(directory="/frontend", html=True), name="frontend")
 
 @app.get("/")
 def redirect():
