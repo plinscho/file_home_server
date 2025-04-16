@@ -1,5 +1,23 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore environment variables
 .env
-.pytest_cache/
-app/__pycache__/
-tests/
-venv/
+
+# Ignore Docker-related files
+docker-compose.override.yml
+
+# Ignore database files
+db/*.sql
+
+# Ignore storage files
+storage/
+
+# Ignore test cache files
+tests/__pycache__/
+tests/*.pyc
+
+# Ignore system files
+.DS_Store
+Thumbs.db

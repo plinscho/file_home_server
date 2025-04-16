@@ -44,9 +44,6 @@ After that, register with the gui from fastAPI, log in and use your id to upload
 
 
 
-
-
-
 # DOCUMENTATION 
 
 ### **1. FastAPI**
