@@ -13,10 +13,10 @@ h1 {
 	text-align: center;
 }
 
-#loginDiv {
+#formDiv {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 50px;
+	height: 200px;
 	border: 3px ;
 }
