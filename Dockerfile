@@ -13,4 +13,6 @@ EXPOSE 8888
 COPY ./app ./app
 COPY .env .env
 COPY ./storage ./storage
+COPY ./frontend ./frontend
+
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8888", "--reload"]
