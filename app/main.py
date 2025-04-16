@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-form fastAPI.responses import RedirectResponse
+from fastapi.responses import RedirectResponse
+
 from .routes import users, files
 from . import models
 from .database import Base, engine, get_db
