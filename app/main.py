@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from .routes import users, files
+from passlib.hash import bcrypt
 from . import models
 from .database import Base, engine, get_db
 
@@ -11,16 +12,13 @@ app = FastAPI()
 # https://fastapi.tiangolo.com/tutorial/static-files/#use-staticfiles
 app.mount("/", StaticFiles(directory="frontend/", html=True), name="frontend")
 
-@app.get("/")
-def redirect():
-	return RedirectResponse(url="/docs")
-
 @app.on_event("startup")
 def	startup_event():
 	db = next(get_db())
 	db_user = db.query(models.User).filter_by(id=1).first()
 	if not db_user:
-		new_user = models.User(id=1, username="db_username", password=DEFAULT_PWD)
+		hashed_pwd = bcrypt.hash(str(DEFAULT_PWD))
+		new_user = models.User(id=1, username="db_username", password=hashed_pwd)
 		db.add(new_user)
 		db.commit()
 	files.sync_storage_db(db)
