@@ -28,6 +28,11 @@ def sync_storage_db(db: Session):
                 db.add(new_file)
         db.commit()
 
+@router.get("/sync")
+def sync_files(db: Session = Depends(get_db)):
+    sync_storage_db(db)
+    return {"message": "Storage syncronized with database!"}
+
 @router.post("/upload/")
 def upload_file(user_id: int, file: UploadFile=File(...), db: Session = Depends(get_db)):
     user = db.query(models.User).filter_by(id=user_id).first()
@@ -55,6 +60,8 @@ def upload_file(user_id: int, file: UploadFile=File(...), db: Session = Depends(
 @router.get("/list/")
 def list_files(db: Session = Depends(get_db)):
     files = db.query(models.Data).all()
+    if not files:
+        return []
     return files
 
 @router.get("/download/{file_id}")
@@ -64,7 +71,3 @@ def download_file(file_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Error. File not found!")
     return FileResponse(file.file_path, media_type="application/octet-stream", filename=file.file_name)
 
-@router.post("/sync")
-def sync_files(db: Session = Depends(get_db)):
-    sync_storage_db(db)
-    return {"message": "Storage syncronized with database!"}

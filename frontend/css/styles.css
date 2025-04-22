@@ -1,5 +1,51 @@
 html {
-	background-color: blue;
+	background-color: lightblue;
 
 }
 
+h1 {
+	text-align: center;
+	color: chocolate;
+}
+
+.italic {
+	font-style: italic;
+	text-align: center;
+}
+
+#formDiv {
+	padding: 80px;
+	display:flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	height: 200px;
+	border: 3px ;
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* Alinear elementos en columna */
+    gap: 15px; /* Espaciado entre los elementos */
+    width: 300px; /* Ancho fijo para alinear los inputs */
+}
+
+form div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+form label {
+    width: 100px; /* Ancho fijo para las etiquetas */
+    text-align: left; /* Alinear texto a la izquierda */
+}
+
+form input {
+    flex: 1; /* Hacer que los inputs ocupen el espacio restante */
+    padding: 5px; /* Añadir padding para mejor apariencia */
+}
+
+#loginButton {
+	padding: auto;
+}
