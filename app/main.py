@@ -9,7 +9,7 @@ DEFAULT_PWD = 1234
 app = FastAPI()
 
 # https://fastapi.tiangolo.com/tutorial/static-files/#use-staticfiles
-app.mount("/", StaticFiles(directory="frontend/", html=True), name="frontend")
+app.mount("/static", StaticFiles(directory="frontend/", html=True), name="frontend")
 
 @app.get("/")
 def redirect():
