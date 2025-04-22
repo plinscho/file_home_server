@@ -1,12 +1,12 @@
-FROM python:alpine
+FROM python:3.12-slim
 
 WORKDIR /app
 
 RUN apt update && apt upgrade -y
 COPY requirements.txt .
+RUN apt-get update && apt-get install -y dnsutils curl net-tools iputils-ping
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN apt-get update && apt-get install -y dnsutils curl net-tools iputils-ping
 
 EXPOSE 8888
 
