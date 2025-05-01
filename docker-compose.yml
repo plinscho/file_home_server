@@ -15,14 +15,24 @@ services:
       timeout: 5s
       retries: 5
 
+  
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - frontend_build:/app/frontend
+    command: sh -c "echo 'Frontend built'"
+
   api:
     build: .
-    #network_mode: "host"
     depends_on:
+      frontend:
+        condition: service_started
       db:
         condition: service_healthy
     volumes:
       - ./storage:/app/storage
+      - frontend_build:/app/frontend/dist
     ports:
       - "8888:8000"
     env_file:
@@ -30,7 +40,6 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --reload
     restart: on-failure
 
-
-
 volumes:
   postgres_data:
+  frontend_build:

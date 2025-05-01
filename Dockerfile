@@ -1,16 +1,15 @@
-FROM python:3.12-slim
+#Backend dockerfile
+FROM python:3.13-alpine
 
 WORKDIR /app
 
-RUN apt update && apt upgrade -y
 COPY requirements.txt .
-RUN apt-get update && apt-get install -y dnsutils curl net-tools iputils-ping
 RUN pip install --no-cache-dir -r requirements.txt
-
 
 EXPOSE 8888
 
 COPY ./app ./app
 COPY .env .env
+COPY ./frontend/dist ./frontend/dist
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8888", "--reload"]
