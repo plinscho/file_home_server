@@ -6,3 +6,6 @@ WORKDIR /app
 COPY . .
 RUN npm install
 RUN npm run build
+
+# Keep container running:
+CMD ["tail", "-f", "/dev/null"]

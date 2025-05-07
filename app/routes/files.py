@@ -9,7 +9,8 @@ from pathlib import Path
 
 router = APIRouter()
 
-STORAGE_PATH = Path("storage").resolve()
+# Path from the docker compose "api" service -> volumes
+STORAGE_PATH = Path("/app/storage").resolve()
 
 def sync_storage_db(db: Session):
     for root, _, files in os.walk(STORAGE_PATH):

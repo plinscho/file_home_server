@@ -10,17 +10,14 @@ import os
 DEFAULT_PWD = 1234
 app = FastAPI()
 
-frontend_path = os.path.join(os.path.dirname(__file__), "../frontend/dist")
-# run "npm run build" before to generate the files for serving them now
+# Path from docker compose volumes_frontend-build
+frontend_path = "/app/frontend"
+
+app.include_router(users.router, prefix="/users")
+app.include_router(files.router, prefix="/files")
+
+# run "npm run build" before to generate the files in the Dockerfile!
 app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
-
-@app.get("/")
-def read_index():
-	return FileResponse("frontend/dist/index.html")
-
-@app.get("/{path:path}")
-def catch_all(path: str):
-    return FileResponse("frontend/dist/index.html")
 
 @app.on_event("startup")
 def	startup_event():
@@ -33,6 +30,4 @@ def	startup_event():
 		db.commit()
 	files.sync_storage_db(db)
 
-app.include_router(users.router, prefix="/api/users")
-app.include_router(files.router, prefix="/api/files")
 

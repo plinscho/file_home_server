@@ -10,6 +10,9 @@ EXPOSE 8888
 
 COPY ./app ./app
 COPY .env .env
-COPY ./frontend/dist ./frontend/dist
+
+# COPY ./frontend ./frontend
+# before (top)		is this ok?
+COPY ./frontend /app/frontend
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8888", "--reload"]
