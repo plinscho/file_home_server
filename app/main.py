@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from .routes import users, files
 from passlib.hash import bcrypt
 from . import models
@@ -9,6 +10,14 @@ import os
 
 DEFAULT_PWD = 1234
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Frontend dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Path from docker compose volumes_frontend-build
 frontend_path = "/app/frontend"

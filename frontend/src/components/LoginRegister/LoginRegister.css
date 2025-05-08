@@ -1,9 +1,9 @@
 .container {
 	display: flex;
-	width: 600px;
 	flex-direction: column;
 	margin: auto;
 	margin-top: 200px;
+	width: 600px;
 	background: #fff;
 	padding-bottom: 30px;
 }
@@ -48,6 +48,8 @@
 }
 
 .input img{
+	width: 30px;
+	height: 30px;
 	margin: 0px 30px;
 }
 
