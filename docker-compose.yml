@@ -14,8 +14,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app_network
+    restart: always
 
-  
   frontend:
     build:
       context: ./frontend
@@ -24,7 +26,9 @@ services:
     volumes:
       - ./frontend:/app  # Mount local frontend directory
       - /app/node_modules  # Prevent overwriting node_modules
-    command: npm run dev -- --host 0.0.0.0 
+    command: npm run dev -- --host 0.0.0.0
+    networks:
+      - app_network
 
   api:
     build: .
@@ -43,6 +47,12 @@ services:
       - .env
     command: uvicorn app.main:app --host 0.0.0.0 --port 8888 --reload
     restart: on-failure
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
 
 volumes:
   postgres_data:
