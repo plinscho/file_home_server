@@ -11,9 +11,21 @@ export default defineConfig({
     host: true,  // Listen on all interfaces
     proxy: {
       '/api': {
-        target: 'http://file_home_server-api-1:8888',
+        target: 'http://api:8888',  // Use service name from docker-compose
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        // Add these properties for better error handling
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('proxy error', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Sending Request:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('Received Response from:', req.url, proxyRes.statusCode);
+          });
+        }
       }
     }
   }
